@@ -7,9 +7,10 @@ Keeping track of my learnings of Next.js topics
 
 | Topic | Repo Link |
 | ----- | ----- |
-| NA | NA |
+| Introuction| NA |
 
 <br>
 
 ## Topics Covered
-_Topics completed will be added here..._
+
+### Introduction
