@@ -62,3 +62,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   - [x] ESLint plugins
   - [x] eslint-plugin-tailwind
 - [x] Prettier
+- [x] TailwindCSS setup
