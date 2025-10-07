@@ -21,9 +21,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "DevFlow",
+  title: "CodeOverFlow",
   description:
-    "DevFlow is a full-stack web application that replicates the core functionality of Stack Overflow, creating a collaborative space for developers to ask technical questions, share knowledge, and solve problems together. The platform is designed to foster a vibrant community where users can build their reputation by providing valuable answers and engaging with content.",
+    "CodeOverFlow is a full-stack web application that replicates the core functionality of Stack Overflow, creating a collaborative space for developers to ask technical questions, share knowledge, and solve problems together. The platform is designed to foster a vibrant community where users can build their reputation by providing valuable answers and engaging with content.",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
