@@ -1,3 +1,4 @@
+import GlobalSearch from "../search/GlobalSearch";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 
 import React from "react";
@@ -23,7 +24,7 @@ const Navbar = () => {
           Code<span className="text-primary-500">OverFlow</span>{" "}
         </p>
       </Link>
-      GlobalSearch
+      <GlobalSearch />
       <div className="flex-between gap-5">
         <Theme />
         <SignedIn>

@@ -11,6 +11,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetOverlay,
   SheetTrigger,
 } from "@/components/ui/sheet";
 
@@ -60,9 +61,10 @@ const MobileNav = () => {
           className="invert-colors  sm:hidden"
         />
       </SheetTrigger>
+      <SheetOverlay className="bg-transparent" />
       <SheetContent
         side="left"
-        className="background-light900_dark200 border-none"
+        className="bg-light-900 dark:bg-dark-200 border-none"
       >
         <Link href="/" className="flex items-center gap-1">
           <Image
