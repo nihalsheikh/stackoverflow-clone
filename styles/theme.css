@@ -88,7 +88,8 @@
     }
 
     .text-dark400_light800 {
-        @apply text-dark-400 dark:text-light-800;
+        /* Made some changes, changed dark-400 to dark-500 */
+        @apply text-dark-500 dark:text-light-800;
     }
 
     .text-light400_light500 {
