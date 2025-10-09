@@ -36,9 +36,21 @@ body {
         @apply flex justify-start items-center;
     }
 
-    .card-wrapper {
+    /* Error Occured in Question Card because we commented the dar-gradient */
+    /* so making a new css property instead of using the following */
+    /* .card-wrapper {
         @apply bg-light-900 dark:dark-gradient shadow-light-100 dark:shadow-dark-100;
+    } */
+    /* new property to be used */
+    .card-wrapper {
+        @apply bg-light-900 shadow-light-100 dark:shadow-dark-100;
     }
+
+    .dark .card-wrapper {
+        background: linear-gradient(232deg, rgba(23, 28, 35, 0.58) 0%, rgba(19, 22, 28, 1) 100%);
+    }
+
+    /* new property ends here */
 
     /* Button Utilities */
     .btn {
