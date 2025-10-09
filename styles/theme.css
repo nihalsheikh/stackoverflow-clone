@@ -17,9 +17,22 @@
         @apply bg-light-900 dark:bg-dark-300;
     }
 
-    .background-light800_darkgradient {
+    /* The following css property was not being applied so chnages were made */
+    /* .background-light800_darkgradient {
         @apply bg-light-800 dark:bg-dark-gradient;
+    } */
+
+    /* changes made to make-up for the above comment property */
+    .background-light800_darkgradient {
+        @apply bg-light-800;
     }
+
+    .dark .background-light800_darkgradient {
+        background-image: linear-gradient(232deg, rgba(23, 28, 35, 0.41) 0%, rgba(19, 22, 28, 0.7) 100%);
+        background-color: transparent;
+    }
+
+    /* changes end here */
 
     .background-light800_dark400 {
         @apply bg-light-800 dark:bg-dark-400 !important;
