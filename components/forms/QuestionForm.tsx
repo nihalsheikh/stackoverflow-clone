@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 
 import Image from "next/image";
 
+import { createQuestion } from "@/lib/actions/question.action.ts";
 import { QuestionsSchema } from "@/lib/validations";
 
 import { Button } from "@/components/ui/button";
@@ -46,12 +47,13 @@ const QuestionForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
 
     try {
       // We can "CREATE" a question or "EDIT" it
       // make an async to our API DB -> to "create" a question
+      await createQuestion();
       // contain all form data
       // navigate to home after submitting
     } catch (error) {
@@ -142,6 +144,8 @@ const QuestionForm = () => {
                 <Editor
                   apiKey={config.tinymceEditorApiKey}
                   onInit={(_evt, editor) => (editorRef.current = editor)}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => field.onChange(content)}
                   initialValue=""
                   init={{
                     height: 350,
