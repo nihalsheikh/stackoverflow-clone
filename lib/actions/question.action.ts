@@ -1,8 +1,19 @@
 // All the Server Action Code for the Question Model
 "use server";
 
-export async function createQuestion(params) {
+import { connectToDatabase } from "../mongoose";
+
+// All the Server Action Code for the Question Model
+
+// All the Server Action Code for the Question Model
+
+// All the Server Action Code for the Question Model
+
+export async function createQuestion(params: any) {
   try {
-    // TODO: connect to DB
-  } catch (error) {}
+    // connect to DB
+    connectToDatabase();
+  } catch (error) {
+    console.log("MongoDB connection failed", error);
+  }
 }
