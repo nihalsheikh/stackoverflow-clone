@@ -9,8 +9,9 @@ import { z } from "zod";
 import { useRef, useState } from "react";
 
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
-import { createQuestion } from "@/lib/actions/question.action.ts";
+import { createQuestion } from "@/lib/actions/question.action";
 import { QuestionsSchema } from "@/lib/validations";
 
 import { Button } from "@/components/ui/button";
@@ -30,11 +31,18 @@ import config from "@/config/config";
 // Type of Form
 const type: any = "create";
 
-const QuestionForm = () => {
+interface Props {
+  mongoUserId: string;
+}
+
+const QuestionForm = ({ mongoUserId }: Props) => {
   // Editor
   const editorRef = useRef(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
@@ -53,9 +61,15 @@ const QuestionForm = () => {
     try {
       // We can "CREATE" a question or "EDIT" it
       // make an async to our API DB -> to "create" a question
-      await createQuestion();
-      // contain all form data
+      await createQuestion({
+        // contain all form data
+        title: values.title,
+        description: values.description,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+      });
       // navigate to home after submitting
+      router.push("/");
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -195,7 +209,7 @@ const QuestionForm = () => {
                 Tags <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
-                <>
+                <div>
                   <Input
                     placeholder="Add tags..."
                     className="no-focus paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
@@ -222,7 +236,7 @@ const QuestionForm = () => {
                       ))}
                     </div>
                   )}
-                </>
+                </div>
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
                 Add up to 3 tags to describe what your question is about. Start
