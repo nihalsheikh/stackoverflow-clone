@@ -67,6 +67,7 @@ const QuestionForm = ({ mongoUserId }: Props) => {
         description: values.description,
         tags: values.tags,
         author: JSON.parse(mongoUserId),
+        path: pathname,
       });
       // navigate to home after submitting
       router.push("/");

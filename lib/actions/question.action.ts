@@ -1,42 +1,31 @@
-// All the Server Action Code for the Question Model
 "use server";
 
 import { connectToDatabase } from "../mongoose";
 
+import { revalidatePath } from "next/cache";
+
+import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
 import Question from "@/database/question.model";
 import Tag from "@/database/tag.model";
+import User from "@/database/user.model";
 
-// All the Server Action Code for the Question Model
+export async function getQuestions(params: GetQuestionsParams) {
+  try {
+    connectToDatabase();
 
-// All the Server Action Code for the Question Model
+    const questions = await Question.find({})
+      .populate({ path: "tags", model: Tag })
+      .populate({ path: "author", model: User })
+      .sort({ createdAt: -1 });
 
-// All the Server Action Code for the Question Model
+    return { questions };
+  } catch (error) {
+    console.log("getQuestions Error: ", error);
+    throw error;
+  }
+}
 
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-// All the Server Action Code for the Question Model
-
-export async function createQuestion(params: any) {
+export async function createQuestion(params: CreateQuestionParams) {
   try {
     // connect to DB
     connectToDatabase();
@@ -71,7 +60,11 @@ export async function createQuestion(params: any) {
     // Create an Interaction record for the User's ask-question action
 
     // Increment the author's reputation by +5 for creating a question
+
+    // do something that we don't need to rload page after creating question
+    revalidatePath(path);
   } catch (error) {
-    console.log("MongoDB connection failed", error);
+    console.log("createQuestion Error: ", error);
+    throw error;
   }
 }
