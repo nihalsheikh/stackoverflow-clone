@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
     const eventType = evt.type;
 
     // Handle specific events
+    console.log("Events: Creating User");
+
     if (eventType === "user.created") {
       const {
         id,
@@ -34,6 +36,8 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ message: "OK", user: mongoUser });
     }
+
+    console.log("User created");
 
     if (eventType === "user.updated") {
       const {
@@ -77,3 +81,52 @@ export async function POST(req: NextRequest) {
     return new Response("Error verifying webhook", { status: 400 });
   }
 }
+
+// Put import on top
+// import { Webhook } from "svix";
+// import config from "@/config/config";
+// import { headers } from "next/headers";
+
+// new code starts here: PUT THIS INSIDE POST Function
+// const WEBHOOK_SECRET = config.clerkWebhookSigningSecret;
+
+// if (!WEBHOOK_SECRET) {
+//   throw new Error(
+//     "Please add WEBHOOK_SECRET from Clerk Dashboard to your Environment Variables",
+//   );
+// }
+
+// const headerPayload = headers();
+
+// const svixId = (await headerPayload).get("svix-id");
+// const svixTimestamp = (await headerPayload).get("svix-timestamp");
+// const svixSignature = (await headerPayload).get("svix-signature");
+
+// // if there are no headers, error out
+// if (!svixId || !svixTimestamp || !svixSignature) {
+//   return new Response("Error occured -- no svix headers", { status: 400 });
+// }
+
+// // Get the Body
+// const payload = await req.json();
+// const body = JSON.stringify(payload);
+
+// // create a new SVIX instance with secret
+// const wh = new Webhook(WEBHOOK_SECRET);
+
+// let evt: WebhookEvent;
+
+// // Verify the payload with headers
+// try {
+//   evt = wh.verify(body, {
+//     "svix-id": svixId,
+//     "svix-timestamp": svixTimestamp,
+//     "svix-signature": svixSignature,
+//   }) as WebhookEvent;
+// } catch (error) {
+//   console.error("Error verifying webhook: ", error);
+//   return new Response("Error occured", { status: 400 });
+// }
+
+// const eventType = evt.type;
+// // new code ends here
