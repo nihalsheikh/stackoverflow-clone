@@ -6,6 +6,8 @@ const config = {
   tinymceEditorApiKey: process.env.NEXT_PUBLIC_TINYMCE_EDITOR_API_KEY,
   // MongoDB URL
   mongoDbUrl: process.env.MONGODB_URL,
+  // Clerk Webhook Secret
+  clerkWebhookSigningSecret: process.env.CLERK_WEBHOOK_SIGNING_SECRET,
 };
 
 export default config;
