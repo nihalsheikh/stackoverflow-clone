@@ -14,7 +14,7 @@ import { HomePageFilters } from "@/constants/filters";
 export default async function Home() {
   const result = await getQuestions({});
 
-  console.log(result.questions);
+  // console.log(result.questions);
 
   return (
     <>
