@@ -34,7 +34,13 @@ export async function createUser(userData: CreateUserParams) {
   try {
     connectToDatabase();
 
-    const newUser = await User.create(userData);
+    const newUser = await User.create({
+      clerkId: userData.clerkId,
+      name: userData.name,
+      username: userData.username,
+      email: userData.email,
+      pictureUrl: userData.picture, // Map picture to pictureUrl
+    });
 
     return newUser;
   } catch (error) {
@@ -49,11 +55,13 @@ export async function updateUser(params: UpdateUserParams) {
 
     const { clerkId, updateData, path } = params;
 
-    await User.findOneAndUpdate({ clerkId }, updateData, {
+    const updatedUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
     });
 
     revalidatePath(path);
+
+    return updatedUser;
   } catch (error) {
     console.log("updateUser Error: ", error);
     throw error;
