@@ -1,7 +1,6 @@
 "use server";
 
 import { connectToDatabase } from "../mongoose";
-import path from "path";
 
 import { revalidatePath } from "next/cache";
 
@@ -14,10 +13,10 @@ import {
 import Question from "@/database/question.model";
 import User from "@/database/user.model";
 
-export async function getUserById(params: any) {
+export async function getUserById(params: GetUserByIdParams) {
   try {
     // connect to db
-    connectToDatabase();
+    await connectToDatabase();
 
     const { userId } = params;
 
@@ -32,7 +31,9 @@ export async function getUserById(params: any) {
 
 export async function createUser(userData: CreateUserParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
+
+    console.log("🔄 Creating user with data:", userData);
 
     const newUser = await User.create({
       clerkId: userData.clerkId,
@@ -41,6 +42,8 @@ export async function createUser(userData: CreateUserParams) {
       email: userData.email,
       pictureUrl: userData.picture, // Map picture to pictureUrl
     });
+
+    console.log("✅ User created in MongoDB:", newUser);
 
     return newUser;
   } catch (error) {
@@ -51,13 +54,24 @@ export async function createUser(userData: CreateUserParams) {
 
 export async function updateUser(params: UpdateUserParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { clerkId, updateData, path } = params;
 
+    console.log("🔄 Updating user with clerkId:", clerkId);
+    console.log("📝 Update data:", updateData);
+
     const updatedUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
+      runValidators: true,
     });
+
+    if (!updatedUser) {
+      console.log("⚠️ User not found for update, clerkId:", clerkId);
+      return null;
+    }
+
+    console.log("✅ User updated in MongoDB:", updatedUser);
 
     revalidatePath(path);
 
@@ -70,11 +84,19 @@ export async function updateUser(params: UpdateUserParams) {
 
 export async function deleteUser(params: DeleteUserParams) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
 
     const { clerkId } = params;
 
-    const user = await User.findOneAndDelete({ clerkId });
+    // const user = await User.findOneAndDelete({ clerkId }); // original
+    const user = await User.findOne({ clerkId });
+
+    if (!user) {
+      console.log("⚠️ User not found for deletion, clerkId:", clerkId);
+      throw new Error("User not found");
+    }
+
+    console.log("🔄 Deleting user and associated data:", user._id);
 
     if (!user) throw new Error("User not found");
 
@@ -86,15 +108,18 @@ export async function deleteUser(params: DeleteUserParams) {
     );
 
     await Question.deleteMany({ author: user._id });
+    console.log(`🗑️ Deleted ${userQuestionIds.length} questions`);
 
     // TODO: delete Answers
 
     // deleting user
     const deletedUser = await User.findByIdAndDelete(user._id);
 
+    console.log("✅ User deleted from MongoDB:", deletedUser?.username);
+
     return deletedUser;
   } catch (error) {
-    console.log("createUser Error: ", error);
+    console.log("deleteUser Error: ", error);
     throw error;
   }
 }
