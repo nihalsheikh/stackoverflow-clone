@@ -11,6 +11,9 @@ export async function POST(req: NextRequest) {
     // Handle different event types
     const eventType = evt.type;
 
+    // Checking of event are happening
+    console.log({ eventType });
+
     // Handle specific events
     if (eventType === "user.created") {
       const {
