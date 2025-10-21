@@ -12,7 +12,9 @@ export async function POST(req: NextRequest) {
     const eventType = evt.type;
 
     // Checking of event are happening
-    console.log({ eventType });
+    console.log("Webhook event type:", eventType);
+
+    const data = evt.data;
 
     // Handle specific events
     if (eventType === "user.created") {

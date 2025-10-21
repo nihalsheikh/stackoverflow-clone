@@ -13,7 +13,7 @@ const isPublicRoute = createRouteMatcher([
   "/jobs",
 ]);
 
-const ignoredRoutes = ["/api/webhook", "/api/chatgpt"];
+// const ignoredRoutes = ["/api/webhook", "/api/chatgpt"];
 
 export default clerkMiddleware(async (auth, req) => {
   if (!isPublicRoute(req)) await auth.protect();
