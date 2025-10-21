@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     const evt = await verifyWebhook(req);
 
     // Handle different event types
+    const { id } = evt.data;
     const eventType = evt.type;
 
     // Handle specific events
