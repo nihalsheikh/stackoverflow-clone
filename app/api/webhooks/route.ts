@@ -134,21 +134,30 @@ export async function POST(req: Request) {
       console.log("   - new username:", username);
 
       try {
+        // Build update data object - only include username if it's not null
+        const updateData: any = {
+          name:
+            `${first_name || ""}${last_name ? ` ${last_name}` : ""}`.trim() ||
+            "User",
+          email: email_addresses[0].email_address,
+          pictureUrl: image_url,
+        };
+
+        // Only update username if it's provided and not null
+        if (username && username !== null) {
+          updateData.username = username;
+        }
+
         const mongoUser = await updateUser({
           clerkId: id,
-          updateData: {
-            name:
-              `${first_name || ""}${last_name ? ` ${last_name}` : ""}`.trim() ||
-              "User",
-            username: username!,
-            email: email_addresses[0].email_address,
-            pictureUrl: image_url,
-          },
+          updateData,
           path: `/profile/${id}`,
         });
 
         if (!mongoUser) {
           console.log("⚠️ User not found in MongoDB, creating new user...");
+
+          // Create user if they don't exist
           const newUser = await createUser({
             clerkId: id,
             name:
@@ -159,6 +168,7 @@ export async function POST(req: Request) {
             email: email_addresses[0].email_address,
             picture: image_url,
           });
+
           console.log("✅ User created (was missing):", newUser?._id);
           return NextResponse.json(
             {
