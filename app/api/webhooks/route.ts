@@ -1,4 +1,4 @@
-// app/api/webhooks/clerk/route.ts
+// app/api/webhooks/route.ts
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { Webhook } from "svix";
 
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Webhook received");
+    console.log("🔔 Webhook received");
 
     // Get headers
     const headerPayload = await headers();
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const svix_signature = headerPayload.get("svix-signature");
 
     if (!svix_id || !svix_timestamp || !svix_signature) {
-      console.error("Missing svix headers");
+      console.error("❌ Missing svix headers");
       return NextResponse.json(
         { error: "Missing svix headers" },
         { status: 400 },
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const payload = await req.json();
     const body = JSON.stringify(payload);
 
-    console.log("📦 Payload received:", payload.type);
+    console.log("📦 Webhook payload received, event type:", payload.type);
 
     // Verify webhook
     const wh = new Webhook(WEBHOOK_SECRET);
@@ -53,18 +53,18 @@ export async function POST(req: Request) {
         "svix-timestamp": svix_timestamp,
         "svix-signature": svix_signature,
       }) as WebhookEvent;
-      console.log("Webhook verified successfully");
+      console.log("✅ Webhook verified successfully");
     } catch (err) {
-      console.error("Error verifying webhook:", err);
+      console.error("❌ Webhook verification failed:", err);
       return NextResponse.json(
-        { error: "Verification failed" },
+        { error: "Webhook verification failed" },
         { status: 400 },
       );
     }
 
     // Handle the webhook
     const eventType = evt.type;
-    console.log("🎯 Event type:", eventType);
+    console.log("🎯 Processing event type:", eventType);
 
     if (eventType === "user.created") {
       const {
@@ -76,31 +76,43 @@ export async function POST(req: Request) {
         image_url,
       } = evt.data;
 
-      console.log("👤 Creating user with clerkId:", id);
-      console.log("📧 Email:", email_addresses[0].email_address);
-      console.log("👨 Name:", first_name, last_name);
-      console.log("🏷️ Username:", username);
+      console.log("👤 Creating user:");
+      console.log("   - clerkId:", id);
+      console.log("   - email:", email_addresses[0].email_address);
+      console.log("   - name:", first_name, last_name);
+      console.log("   - username:", username);
 
       try {
-        // Create user in your database here
         const mongoUser = await createUser({
           clerkId: id,
-          name: `${first_name || ""}${last_name ? ` ${last_name}` : ""}`.trim(),
+          name:
+            `${first_name || ""}${last_name ? ` ${last_name}` : ""}`.trim() ||
+            "User",
           username: username || email_addresses[0].email_address.split("@")[0],
           email: email_addresses[0].email_address,
           picture: image_url,
         });
 
-        console.log("✅ User created successfully with ID:", mongoUser?._id);
+        console.log("✅ User created successfully in MongoDB");
+        console.log("   - MongoDB _id:", mongoUser?._id);
+        console.log("   - clerkId:", mongoUser?.clerkId);
 
-        return NextResponse.json({
-          message: "User created",
-          user: { id: mongoUser?._id, clerkId: mongoUser?.clerkId },
-        });
-      } catch (error) {
-        console.error("Error creating user:", error);
         return NextResponse.json(
-          { message: "Error creating user", error: String(error) },
+          {
+            success: true,
+            message: "User created successfully",
+            userId: mongoUser?._id,
+          },
+          { status: 200 },
+        );
+      } catch (error) {
+        console.error("❌ Error creating user:", error);
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Failed to create user",
+            details: String(error),
+          },
           { status: 500 },
         );
       }
@@ -116,16 +128,18 @@ export async function POST(req: Request) {
         image_url,
       } = evt.data;
 
-      console.log("👤 Updating user with clerkId:", id);
-      console.log("📝 New name:", first_name, last_name);
-      console.log("🏷️ New username:", username);
+      console.log("👤 Updating user:");
+      console.log("   - clerkId:", id);
+      console.log("   - new name:", first_name, last_name);
+      console.log("   - new username:", username);
 
       try {
-        // Update user in your database here
         const mongoUser = await updateUser({
           clerkId: id,
           updateData: {
-            name: `${first_name || ""}${last_name ? ` ${last_name}` : ""}`.trim(),
+            name:
+              `${first_name || ""}${last_name ? ` ${last_name}` : ""}`.trim() ||
+              "User",
             username: username!,
             email: email_addresses[0].email_address,
             pictureUrl: image_url,
@@ -134,8 +148,7 @@ export async function POST(req: Request) {
         });
 
         if (!mongoUser) {
-          console.log("⚠️ User not found in MongoDB, creating now...");
-          // Create the user if they don't exist (fallback)
+          console.log("⚠️ User not found in MongoDB, creating new user...");
           const newUser = await createUser({
             clerkId: id,
             name:
@@ -146,61 +159,84 @@ export async function POST(req: Request) {
             email: email_addresses[0].email_address,
             picture: image_url,
           });
-          console.log("✅ User created (was missing) with ID:", newUser?._id);
-          return NextResponse.json({
-            message: "User created (was missing)",
-            user: { id: newUser?._id, clerkId: newUser?.clerkId },
-          });
+          console.log("✅ User created (was missing):", newUser?._id);
+          return NextResponse.json(
+            {
+              success: true,
+              message: "User created (was missing)",
+              userId: newUser?._id,
+            },
+            { status: 200 },
+          );
         }
 
-        console.log("✅ User updated successfully:", mongoUser);
-
-        return NextResponse.json({
-          message: "User updated",
-          user: { id: mongoUser._id, clerkId: mongoUser.clerkId },
-        });
-      } catch (error) {
-        console.error("Error updating user:", error);
+        console.log("✅ User updated successfully in MongoDB");
         return NextResponse.json(
-          { message: "Error updating user", error: String(error) },
+          {
+            success: true,
+            message: "User updated successfully",
+            userId: mongoUser._id,
+          },
+          { status: 200 },
+        );
+      } catch (error) {
+        console.error("❌ Error updating user:", error);
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Failed to update user",
+            details: String(error),
+          },
           { status: 500 },
         );
       }
     }
 
     if (eventType === "user.deleted") {
-      // Delete user from your database here
       const { id } = evt.data;
 
-      console.log("🗑️ Deleting user:", id);
+      console.log("🗑️ Deleting user with clerkId:", id);
 
       try {
         const deletedUser = await deleteUser({
           clerkId: id!,
         });
 
-        console.log("✅ User deleted successfully:", deletedUser);
-
-        return NextResponse.json({
-          message: "User deleted",
-          user: { username: deletedUser?.username },
-        });
-      } catch (error) {
-        console.error("Error deleting user:", error);
+        console.log("✅ User deleted successfully");
         return NextResponse.json(
-          { message: "Error deleting user", error: String(error) },
+          {
+            success: true,
+            message: "User deleted successfully",
+            username: deletedUser?.username,
+          },
+          { status: 200 },
+        );
+      } catch (error) {
+        console.error("❌ Error deleting user:", error);
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Failed to delete user",
+            details: String(error),
+          },
           { status: 500 },
         );
       }
     }
 
     console.log("ℹ️ Unhandled event type:", eventType);
-
-    return NextResponse.json({ message: "Webhook received" }, { status: 200 });
+    return NextResponse.json(
+      { success: true, message: "Webhook received" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("❌ Webhook handler error:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: String(error) },
+      {
+        success: false,
+        error: "Internal server error",
+        details: String(error),
+      },
       { status: 500 },
     );
   }
