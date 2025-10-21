@@ -7,7 +7,7 @@ const config = {
   // MongoDB URL
   mongoDbUrl: process.env.MONGODB_URL,
   // Clerk Webhook Secret
-  clerkWebhookSigningSecret: process.env.NEXT_CLERK_WEBHOOK_SECRET,
+  clerkWebhookSigningSecret: process.env.CLERK_WEBHOOK_SIGNING_SECRET,
 };
 
 export default config;
