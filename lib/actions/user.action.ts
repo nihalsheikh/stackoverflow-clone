@@ -14,7 +14,7 @@ import {
 import Question from "@/database/question.model";
 import User from "@/database/user.model";
 
-export async function getUserById(params: GetUserByIdParams) {
+export async function getUserById(params: any) {
   try {
     // connect to db
     connectToDatabase();

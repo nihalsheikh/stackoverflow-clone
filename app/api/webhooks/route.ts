@@ -9,12 +9,9 @@ export async function POST(req: NextRequest) {
     const evt = await verifyWebhook(req);
 
     // Handle different event types
-    const { id } = evt.data;
     const eventType = evt.type;
 
     // Handle specific events
-    console.log("Events: Creating User");
-
     if (eventType === "user.created") {
       const {
         id,
@@ -36,8 +33,6 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ message: "OK", user: mongoUser });
     }
-
-    console.log("User created");
 
     if (eventType === "user.updated") {
       const {
