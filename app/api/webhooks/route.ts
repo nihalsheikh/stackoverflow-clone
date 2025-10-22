@@ -68,6 +68,8 @@ export async function POST(req: Request) {
         picture: image_url,
       });
 
+      console.log("eventType Success: ", eventType);
+
       return NextResponse.json({ message: "OK", user: mongoUser });
     } catch (error) {
       console.error("Error creating user:", error);
@@ -95,6 +97,8 @@ export async function POST(req: Request) {
         path: `/profile/${id}`,
       });
 
+      console.log("eventType Success: ", eventType);
+
       return NextResponse.json({ message: "OK", user: mongoUser });
     } catch (error) {
       console.error("Error updating user:", error);
@@ -113,6 +117,8 @@ export async function POST(req: Request) {
       const deletedUser = await deleteUser({
         clerkId: id!,
       });
+
+      console.log("eventType Success: ", eventType);
 
       return NextResponse.json({ message: "OK", user: deletedUser });
     } catch (error) {
