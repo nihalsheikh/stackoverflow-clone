@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     throw new Error("Please add CLERK_WEBHOOK_SECRET to .env");
   }
 
-  console.log("Webhook received");
+  // console.log("Webhook received");
 
   // Get headers
   const headerPayload = await headers();
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  console.log("Event type:", payload.type);
+  // console.log("Event type:", payload.type);
 
   // Verify webhook
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
-    console.log("Webhook verified successfully");
+    // console.log("Webhook verified successfully");
   } catch (err) {
     console.error("Error verifying webhook:", err);
     return new Response("Error: Verification failed", { status: 400 });
