@@ -33,7 +33,7 @@ export async function createUser(userData: CreateUserParams) {
   try {
     await connectToDatabase();
 
-    console.log("🔄 Creating user with data:", userData);
+    // console.log("🔄 Creating user with data:", userData);
 
     const newUser = await User.create({
       clerkId: userData.clerkId,
@@ -43,7 +43,7 @@ export async function createUser(userData: CreateUserParams) {
       pictureUrl: userData.picture, // Map picture to pictureUrl
     });
 
-    console.log("✅ User created in MongoDB:", newUser);
+    // console.log("✅ User created in MongoDB:", newUser);
 
     return newUser;
   } catch (error) {
@@ -58,8 +58,8 @@ export async function updateUser(params: UpdateUserParams) {
 
     const { clerkId, updateData, path } = params;
 
-    console.log("🔄 Updating user with clerkId:", clerkId);
-    console.log("📝 Update data:", updateData);
+    // console.log("🔄 Updating user with clerkId:", clerkId);
+    // console.log("📝 Update data:", updateData);
 
     const updatedUser = await User.findOneAndUpdate({ clerkId }, updateData, {
       new: true,
@@ -71,7 +71,7 @@ export async function updateUser(params: UpdateUserParams) {
       return null;
     }
 
-    console.log("✅ User updated in MongoDB:", updatedUser);
+    // console.log("✅ User updated in MongoDB:", updatedUser);
 
     revalidatePath(path);
 
@@ -96,7 +96,7 @@ export async function deleteUser(params: DeleteUserParams) {
       throw new Error("User not found");
     }
 
-    console.log("🔄 Deleting user and associated data:", user._id);
+    // console.log("🔄 Deleting user and associated data:", user._id);
 
     if (!user) throw new Error("User not found");
 
@@ -108,14 +108,14 @@ export async function deleteUser(params: DeleteUserParams) {
     );
 
     await Question.deleteMany({ author: user._id });
-    console.log(`🗑️ Deleted ${userQuestionIds.length} questions`);
+    // console.log(`🗑️ Deleted ${userQuestionIds.length} questions`);
 
     // TODO: delete Answers
 
     // deleting user
     const deletedUser = await User.findByIdAndDelete(user._id);
 
-    console.log("✅ User deleted from MongoDB:", deletedUser?.username);
+    // console.log("✅ User deleted from MongoDB:", deletedUser?.username);
 
     return deletedUser;
   } catch (error) {
