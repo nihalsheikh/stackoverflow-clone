@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
   },
 
   serverExternalPackages: ["mongoose"],
+
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "*" },
+      { protocol: "http", hostname: "*" },
+    ],
+  },
 };
 
 export default withMDX(nextConfig);
