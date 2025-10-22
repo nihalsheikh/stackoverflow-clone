@@ -7,8 +7,10 @@ import { NextResponse } from "next/server";
 
 import { createUser, deleteUser, updateUser } from "@/lib/actions/user.action";
 
+import config from "@/config/config";
+
 export async function POST(req: Request) {
-  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
+  const WEBHOOK_SECRET = config.clerkWebhookSigningSecret;
 
   if (!WEBHOOK_SECRET) {
     throw new Error("Please add CLERK_WEBHOOK_SECRET to .env");
