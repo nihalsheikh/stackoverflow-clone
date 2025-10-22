@@ -60,7 +60,7 @@ const Page = async () => {
             title="No Tags Found"
             description="It looks like there are no tags found."
             link="/ask-question"
-            linkTitle="Ask a question"
+            buttonTitle="Ask a question"
           />
         )}
       </section>
