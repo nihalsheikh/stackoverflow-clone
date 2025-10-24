@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import parse from "html-react-parser";
 import Prism from "prismjs";
 import "prismjs/components/prism-aspnet";
@@ -25,19 +27,37 @@ import "prismjs/components/prism-typescript";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 
-import { useEffect } from "react";
-
 interface Props {
   data: string;
 }
 
 const ParseHTML = ({ data }: Props) => {
-  console.log(data);
+  const [parsedContent, setParsedContent] = useState<React.ReactNode>(null);
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
-    Prism.highlightAll();
+    // Mark as client-side
+    setIsClient(true);
   }, []);
 
-  return <div>{parse(data)}</div>;
+  useEffect(() => {
+    if (isClient && data) {
+      // Parse the HTML content
+      setParsedContent(parse(data));
+
+      // Highlight syntax after content is rendered
+      // Use setTimeout to ensure DOM is updated
+      setTimeout(() => {
+        Prism.highlightAll();
+      }, 0);
+    }
+  }, [data, isClient]);
+
+  if (!isClient) {
+    return <div className="min-h-[100px]" />; // Placeholder with min height
+  }
+
+  return <div suppressHydrationWarning>{parsedContent}</div>;
 };
 
 export default ParseHTML;

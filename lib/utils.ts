@@ -53,3 +53,26 @@ export const formatNumber = (value: number): string => {
 
   return value.toString();
 };
+
+export const formatAndDivideNumber = (value: number): string => {
+  if (value === null || value === undefined || isNaN(value)) return "0";
+
+  const absValue = Math.abs(value);
+  const sign = value > 0 ? "+" : value < 0 ? "-" : "";
+
+  const units = [
+    { suffix: "T", value: 1e12 },
+    { suffix: "B", value: 1e9 },
+    { suffix: "M", value: 1e6 },
+    { suffix: "K", value: 1e3 },
+  ];
+
+  for (const unit of units) {
+    if (absValue >= unit.value) {
+      const formatted = (absValue / unit.value).toFixed(1).replace(/\.0$/, "");
+      return `${sign}${formatted}${unit.suffix}`;
+    }
+  }
+
+  return `${sign}${absValue}`;
+};

@@ -15,3 +15,7 @@ export const QuestionsSchema = z.object({
     .min(1, { message: "Add a minimum of 1 tag related to the question" })
     .max(3),
 });
+
+export const AnswerSchema = z.object({
+  answer: z.string().min(100),
+});
