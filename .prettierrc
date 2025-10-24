@@ -1,12 +1,14 @@
 {
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
-    "<THIRD_PARTY_MODULES>",
     "^react$",
     "^next",
+    "<THIRD_PARTY_MODULES>",
     "^@/lib/(.*)$",
     "^@/components/(.*)$",
     "^@/app/(.*)$",
+    "^.\\/globals\\.css$",
+    "^\\.\\.\\/styles\\/prism\\.css$",
     "^./(.*)$"
   ],
   "importOrderSeparation": true,

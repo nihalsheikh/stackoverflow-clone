@@ -1,6 +1,5 @@
 // MongoDB Model for Question
 import { Document, Schema, model, models } from "mongoose";
-import { title } from "process";
 
 export interface IQuestion extends Document {
   title: string;

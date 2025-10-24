@@ -1,15 +1,15 @@
 "use client";
 
+import { useRef, useState } from "react";
+
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+
 import { Badge } from "../ui/badge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { useRef, useState } from "react";
-
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
 
 import { createQuestion } from "@/lib/actions/question.action";
 import { QuestionsSchema } from "@/lib/validations";
@@ -27,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import config from "@/config/config";
+import { useTheme } from "@/context/ThemeProvider";
 
 // Type of Form
 const type: any = "create";
@@ -37,6 +38,7 @@ interface Props {
 
 const QuestionForm = ({ mongoUserId }: Props) => {
   // Editor
+  const { themeMode } = useTheme();
   const editorRef = useRef(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -144,7 +146,7 @@ const QuestionForm = ({ mongoUserId }: Props) => {
           )}
         />
 
-        {/* Question Description */}
+        {/* Question Description Editor */}
         <FormField
           control={form.control}
           name="description"
@@ -187,6 +189,8 @@ const QuestionForm = ({ mongoUserId }: Props) => {
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
                       "alignright alignjustify | bullist numlist",
                     content_style: `body { font-family:Inter; font-size:16px }`,
+                    content_css: themeMode === "dark" ? "dark" : "light",
+                    skin: themeMode === "dark" ? "oxide-dark" : "oxide",
                   }}
                 />
               </FormControl>
