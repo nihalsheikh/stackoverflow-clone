@@ -1,7 +1,7 @@
+import Link from "next/link";
+
 import Metric from "../shared/Metric";
 import RenderTag from "../shared/RenderTag";
-
-import Link from "next/link";
 
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
@@ -18,7 +18,7 @@ interface QuestionCardProps {
     pictureUrl: string;
   };
   createdAt: Date;
-  upvotes: number;
+  upvotes: string[];
   answers: Array<object>;
   views: number;
 }
@@ -72,7 +72,7 @@ const QuestionCard = ({
         <Metric // For Votes
           imgUrl="/assets/icons/like.svg"
           alt="upvotes"
-          value={formatNumber(upvotes)}
+          value={formatNumber(upvotes.length)}
           title=" Votes"
           textStyles="small-medium text-dark400_light800"
         />
