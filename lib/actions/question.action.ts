@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 
 import { connectToDatabase } from "../mongoose";
-import { is } from "zod/v4/locales";
 
 import {
   CreateQuestionParams,
