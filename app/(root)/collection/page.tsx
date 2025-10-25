@@ -8,6 +8,7 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { QuestionFilters } from "@/constants/filters";
+import { IQuestion } from "@/database/question.model";
 
 export default async function Collection() {
   const { userId } = await auth();
@@ -40,7 +41,7 @@ export default async function Collection() {
       <div className="mt-10 flex flex-col w-full gap-6">
         {/* Loop over questions and display a QuestionCard */}
         {result.questions.length > 0 ? (
-          result.questions.map((question: any) => (
+          result.questions.map((question: IQuestion) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
