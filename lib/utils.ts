@@ -31,7 +31,7 @@ export const getTimeStamp = (createdAt: Date): string => {
   return "just now";
 };
 
-// Make number into human readable format
+// Make number into human readable format ALSO calling this formatAndDivideNumber
 export const formatNumber = (value: number): string => {
   if (value === null || value === undefined || isNaN(value)) return "0";
 
@@ -54,25 +54,12 @@ export const formatNumber = (value: number): string => {
   return value.toString();
 };
 
-export const formatAndDivideNumber = (value: number): string => {
-  if (value === null || value === undefined || isNaN(value)) return "0";
+export const getJoinedDate = (date: Date | string): string => {
+  // Convert to Date object if it's a string
+  const dateObj = typeof date === "string" ? new Date(date) : date;
 
-  const absValue = Math.abs(value);
-  const sign = value > 0 ? "+" : value < 0 ? "-" : "";
+  const month = dateObj.toLocaleString("default", { month: "long" });
+  const year = dateObj.getFullYear();
 
-  const units = [
-    { suffix: "T", value: 1e12 },
-    { suffix: "B", value: 1e9 },
-    { suffix: "M", value: 1e6 },
-    { suffix: "K", value: 1e3 },
-  ];
-
-  for (const unit of units) {
-    if (absValue >= unit.value) {
-      const formatted = (absValue / unit.value).toFixed(1).replace(/\.0$/, "");
-      return `${sign}${formatted}${unit.suffix}`;
-    }
-  }
-
-  return `${sign}${absValue}`;
+  return `${month} ${year}`;
 };
