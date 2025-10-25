@@ -1,5 +1,4 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tailwindcss from "eslint-plugin-tailwindcss";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -22,10 +21,6 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
-    // Eslint plugin -> Import sorting
-    plugins: {
-      "simple-import-sort": simpleImportSort,
-    },
     //  Rules for sorting
     rules: {
       "simple-import-sort/imports": [

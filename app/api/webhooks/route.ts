@@ -1,9 +1,9 @@
 // app/api/webhooks/clerk/route.ts
-import { WebhookEvent } from "@clerk/nextjs/server";
-import { Webhook } from "svix";
-
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+
+import { WebhookEvent } from "@clerk/nextjs/server";
+import { Webhook } from "svix";
 
 import { createUser, deleteUser, updateUser } from "@/lib/actions/user.action";
 
@@ -15,8 +15,6 @@ export async function POST(req: Request) {
   if (!WEBHOOK_SECRET) {
     throw new Error("Please add CLERK_WEBHOOK_SECRET to .env");
   }
-
-  // console.log("Webhook received");
 
   // Get headers
   const headerPayload = await headers();
@@ -33,8 +31,6 @@ export async function POST(req: Request) {
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  // console.log("Event type:", payload.type);
-
   // Verify webhook
   const wh = new Webhook(WEBHOOK_SECRET);
   let evt: WebhookEvent;
@@ -45,7 +41,6 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
-    // console.log("Webhook verified successfully");
   } catch (err) {
     console.error("Error verifying webhook:", err);
     return new Response("Error: Verification failed", { status: 400 });
@@ -67,8 +62,6 @@ export async function POST(req: Request) {
         email: email_addresses[0].email_address,
         picture: image_url,
       });
-
-      console.log("eventType Success: ", eventType);
 
       return NextResponse.json({ message: "OK", user: mongoUser });
     } catch (error) {
@@ -97,8 +90,6 @@ export async function POST(req: Request) {
         path: `/profile/${id}`,
       });
 
-      console.log("eventType Success: ", eventType);
-
       return NextResponse.json({ message: "OK", user: mongoUser });
     } catch (error) {
       console.error("Error updating user:", error);
@@ -117,8 +108,6 @@ export async function POST(req: Request) {
       const deletedUser = await deleteUser({
         clerkId: id!,
       });
-
-      console.log("eventType Success: ", eventType);
 
       return NextResponse.json({ message: "OK", user: deletedUser });
     } catch (error) {
