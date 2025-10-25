@@ -1,40 +1,33 @@
-import { auth } from "@clerk/nextjs/server";
-
-import { getSavedQuestions } from "@/lib/actions/user.action";
+import { getQuestionsByTagId } from "@/lib/actions/tag.actions";
 
 import QuestionCard from "@/components/cards/QuestionCard";
-import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 
-import { QuestionFilters } from "@/constants/filters";
 import { IQuestion } from "@/database/question.model";
+import { URLProps } from "@/types";
 
-export default async function Collection() {
-  const { userId } = await auth();
+const Page = async ({ params, searchParams }: URLProps) => {
+  const { id } = await params;
+  const { q } = await searchParams;
 
-  if (!userId) return null;
-
-  const result = await getSavedQuestions({
-    clerkId: userId,
+  const result = await getQuestionsByTagId({
+    tagId: id,
+    page: 1,
+    searchQuery: q,
   });
 
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
+      <h1 className="h1-bold text-dark100_light900">{result.tagTitle}</h1>
 
-      <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+      <div className="mt-11 w-full">
         <LocalSearch
           route="/"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
-          placeholder="Search within your saved questions..."
+          placeholder="Search tag questions..."
           otherClasses="flex-1"
-        />
-        <Filter
-          filters={QuestionFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px]"
-          containerClasses="hidden max-md:flex"
         />
       </div>
 
@@ -56,10 +49,10 @@ export default async function Collection() {
           ))
         ) : (
           <NoResult
-            title="There's no questions saved to show"
+            title="There's no tag question to show"
             description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
-						discussion. Your query could be the next big thing others learn from.
-						Get involved! 💡"
+								discussion. Your query could be the next big thing others learn from.
+								Get involved! 💡"
             link="/ask-question"
             buttonTitle="Ask a Question"
           />
@@ -67,4 +60,6 @@ export default async function Collection() {
       </div>
     </>
   );
-}
+};
+
+export default Page;

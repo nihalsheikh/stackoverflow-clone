@@ -16,7 +16,7 @@ import Votes from "@/components/shared/Votes";
 
 // searchParams: use this if you need
 const Page = async (props: any) => {
-  const { params, searchParams } = await props;
+  const { params } = await props;
   const { userId: clerkId } = await auth();
 
   let mongoUser;

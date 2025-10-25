@@ -1,6 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
-
 import { redirect } from "next/navigation";
+
+import { auth } from "@clerk/nextjs/server";
 
 import { getUserById } from "@/lib/actions/user.action";
 
@@ -37,7 +37,7 @@ const Page = async () => {
     );
   }
 
-  console.log(mongoUser);
+  // console.log(mongoUser);
 
   return (
     <div>
