@@ -19,16 +19,12 @@ export async function createAnswer(params: CreateAnswerParams) {
 
     const { description, author, question, path } = params;
 
-    // console.log("creating answer in db");
-
     const newAnswer = await Answer.create({ description, author, question });
 
     // add the Answer to Question Model's answer array
     await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
     });
-
-    // console.log("created answer in db");
 
     // TODO: create the interaction...
 
