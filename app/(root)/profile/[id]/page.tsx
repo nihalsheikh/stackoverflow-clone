@@ -19,7 +19,7 @@ import { URLProps } from "@/types";
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = await auth();
   const { id } = await params;
-  const { q } = await searchParams;
+  const awaitedSearchParams = await searchParams;
 
   const userInfo = await getUserInfo({ userId: id });
 
@@ -103,14 +103,14 @@ const Page = async ({ params, searchParams }: URLProps) => {
           </TabsList>
           <TabsContent value="top-posts">
             <QuestionTab
-              searchParams={searchParams}
+              searchParams={awaitedSearchParams}
               userId={userInfo.user._id}
               clerkId={clerkId}
             />
           </TabsContent>
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
             <AnswersTab
-              searchParams={searchParams}
+              searchParams={awaitedSearchParams}
               userId={userInfo.user._id}
               clerkId={clerkId}
             />
