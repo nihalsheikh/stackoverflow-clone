@@ -1,7 +1,8 @@
 // MongoDB Model for Question
-import { Document, Schema, model, models } from "mongoose";
+import { Document, Schema, Types, model, models } from "mongoose";
 
 export interface IQuestion extends Document {
+  _id: Types.ObjectId;
   title: string;
   description: string; // content
   tags: Schema.Types.ObjectId[];
