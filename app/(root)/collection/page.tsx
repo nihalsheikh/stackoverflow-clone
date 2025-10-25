@@ -41,9 +41,9 @@ export default async function Collection() {
       <div className="mt-10 flex flex-col w-full gap-6">
         {/* Loop over questions and display a QuestionCard */}
         {result.questions.length > 0 ? (
-          result.questions.map((question: IQuestion) => (
+          result.questions.map((question: IQuestion, index: number) => (
             <QuestionCard
-              key={question._id}
+              key={index}
               _id={question._id}
               title={question.title}
               tags={question.tags}
