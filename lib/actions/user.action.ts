@@ -73,7 +73,7 @@ export async function updateUser(params: UpdateUserParams) {
 
     revalidatePath(path);
 
-    return updatedUser;
+    // return JSON.parse(JSON.stringify(updatedUser));
   } catch (error) {
     console.log("updateUser Error: ", error);
     throw error;
