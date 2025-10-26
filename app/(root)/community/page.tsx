@@ -7,9 +7,15 @@ import Filter from "@/components/shared/Filter";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { UserFilters } from "@/constants/filters";
+import { SearchParamsProps } from "@/types";
 
-const Page = async () => {
-  const result = await getAllUsers({});
+const Page = async ({ searchParams }: SearchParamsProps) => {
+  const { q } = await searchParams;
+
+  const result = await getAllUsers({
+    searchQuery: q,
+  });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Users</h1>

@@ -9,14 +9,17 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { QuestionFilters } from "@/constants/filters";
 import { IQuestion } from "@/database/question.model";
+import { SearchParamsProps } from "@/types";
 
-export default async function Collection() {
+export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();
+  const { q } = await searchParams;
 
   if (!userId) return null;
 
   const result = await getSavedQuestions({
     clerkId: userId,
+    searchQuery: q,
   });
 
   return (
