@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import EditDeleteAction from "../shared/EditDeleteAction";
+import { SignedIn } from "@clerk/nextjs";
+
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 interface Props {
@@ -28,6 +31,8 @@ const AnswerCard = ({
   upvotes,
   createdAt,
 }: Props) => {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
+
   return (
     <div className="card-wrapper rounded-[10px] px-11 py-9">
       {/* Question link - clickable title area */}
@@ -41,6 +46,12 @@ const AnswerCard = ({
               {question.title}
             </h3>
           </div>
+
+          <SignedIn>
+            {showActionButtons && (
+              <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
+            )}
+          </SignedIn>
         </div>
       </Link>
 

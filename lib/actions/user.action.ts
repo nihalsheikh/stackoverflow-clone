@@ -28,7 +28,7 @@ export async function getUserById(params: GetUserByIdParams) {
 
     const { userId } = params;
 
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findOne({ clerkId: userId }).lean();
 
     return user;
   } catch (error) {
@@ -73,7 +73,7 @@ export async function updateUser(params: UpdateUserParams) {
 
     revalidatePath(path);
 
-    return updatedUser;
+    // return JSON.parse(JSON.stringify(updatedUser));
   } catch (error) {
     console.log("updateUser Error: ", error);
     throw error;
