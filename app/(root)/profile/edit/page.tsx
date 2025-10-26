@@ -8,7 +8,7 @@ import { ParamsProps } from "@/types";
 
 const Page = async ({ params }: ParamsProps) => {
   const { userId } = await auth();
-  // const { id } = await params;
+  const { id } = await params;
 
   if (!userId) return null;
 

@@ -27,7 +27,7 @@ export interface Country {
 }
 
 export interface ParamsProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export interface SearchParamsProps {
