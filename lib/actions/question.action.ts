@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { connectToDatabase } from "../mongoose";
+import { FilterQuery } from "mongoose";
 
 import {
   CreateQuestionParams,
@@ -22,7 +23,18 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     connectToDatabase();
 
-    const questions = await Question.find({})
+    const { searchQuery } = params;
+
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { description: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const questions = await Question.find(query)
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
       .sort({ createdAt: -1 }); // latest post goes on top
