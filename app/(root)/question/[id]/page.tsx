@@ -14,9 +14,10 @@ import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
 import Votes from "@/components/shared/Votes";
 
+import { URLProps } from "@/types";
+
 // searchParams: use this if you need
-const Page = async (props: any) => {
-  const { params } = await props;
+const Page = async ({ params, searchParams }: any) => {
   const { userId: clerkId } = await auth();
 
   let mongoUser;
@@ -26,6 +27,7 @@ const Page = async (props: any) => {
   }
 
   const { id } = await params;
+  const { page, filter } = await searchParams;
 
   const result = await getQuestionById({ questionId: id });
 
@@ -118,6 +120,8 @@ const Page = async (props: any) => {
         questionId={result._id}
         userId={mongoUser ? mongoUser._id : ""}
         totalAnswers={result.answers.length}
+        page={page}
+        filter={filter}
       />
 
       {mongoUser && (

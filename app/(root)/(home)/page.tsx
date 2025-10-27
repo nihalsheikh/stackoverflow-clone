@@ -13,11 +13,15 @@ import { HomePageFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const { q } = await searchParams;
+  const awaitedSearchParams = await searchParams;
+  const { q, filter } = awaitedSearchParams;
 
   const result = await getQuestions({
     searchQuery: q,
+    filter: filter,
   });
+
+  // TODO: recommended filter search fetch
 
   return (
     <>

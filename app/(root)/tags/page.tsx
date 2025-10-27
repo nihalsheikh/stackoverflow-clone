@@ -10,10 +10,11 @@ import { TagFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
-  const { q } = await searchParams;
+  const { q, filter } = await searchParams;
 
   const result = await getAllTags({
     searchQuery: q,
+    filter: filter,
   });
 
   return (

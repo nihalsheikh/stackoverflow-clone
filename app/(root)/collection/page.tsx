@@ -13,13 +13,14 @@ import { SearchParamsProps } from "@/types";
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();
-  const { q } = await searchParams;
+  const { q, filter } = await searchParams;
 
   if (!userId) return null;
 
   const result = await getSavedQuestions({
     clerkId: userId,
     searchQuery: q,
+    filter: filter,
   });
 
   return (
@@ -37,7 +38,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
         <Filter
           filters={QuestionFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
-          containerClasses="hidden max-md:flex"
+          containerClasses="max-md:flex"
         />
       </div>
 
