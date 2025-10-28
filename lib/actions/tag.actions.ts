@@ -2,6 +2,7 @@
 
 import { connectToDatabase } from "../mongoose";
 import { FilterQuery } from "mongoose";
+import { skip } from "node:test";
 
 import {
   GetAllTagsParams,
@@ -40,7 +41,10 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+
+    // calc the no. of posts to skip based on the page number and pageSize
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Tag> = {};
 
@@ -52,17 +56,7 @@ export async function getAllTags(params: GetAllTagsParams) {
 
     switch (filter) {
       case "popular":
-        const popularTags = await Tag.aggregate([
-          ...(searchQuery ? [{ $match: query }] : []),
-          {
-            $addFields: {
-              questionCount: { $size: "$questions" },
-            },
-          },
-          { $sort: { questionCount: -1 } },
-        ]);
-
-        return { tags: popularTags };
+        sortOptions = { questionCount: -1 };
         break;
 
       case "recent":
@@ -81,9 +75,41 @@ export async function getAllTags(params: GetAllTagsParams) {
         break;
     }
 
-    const tags = await Tag.find(query).sort(sortOptions);
+    let tags;
 
-    return { tags };
+    // For "popular", use aggregation to count questions
+    if (filter === "popular") {
+      tags = await Tag.aggregate([
+        ...(searchQuery ? [{ $match: query }] : []),
+        {
+          $addFields: {
+            questionCount: { $size: "$questions" },
+          },
+        },
+        { $sort: { questionCount: -1 } },
+        { $skip: skipAmount },
+        { $limit: pageSize },
+      ]);
+    } else {
+      // For other filters, use regular find
+      tags = await Tag.find(query)
+        .sort(sortOptions)
+        .skip(skipAmount)
+        .limit(pageSize);
+    }
+
+    // const tags = await Tag.find(query)
+    //   .sort(sortOptions)
+    //   .skip(skipAmount)
+    //   .limit(pageSize);
+
+    // calc if more questions exist so that we can go to "next" page
+    const totalTags = await Tag.countDocuments(query);
+
+    // Example: lets say we have 100Ques => 20Ques/page * 4 pages + 20Ques on last page = 100
+    const isNext = totalTags > skipAmount + tags.length;
+
+    return { tags, isNext };
   } catch (error) {
     console.log("getAllTags Error: ", error);
     throw error;
@@ -96,6 +122,9 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
     const { tagId, page = 1, pageSize = 10, searchQuery } = params;
 
+    // calc the no. of posts to skip based on the page number and pageSize
+    const skipAmount = (page - 1) * pageSize;
+
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
     const tag = await Tag.findOne(tagFilter).populate({
@@ -106,6 +135,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
         : {},
       options: {
         sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -115,9 +146,11 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 
     if (!tag) throw new Error("Tag not found");
 
+    const isNext = tag.questions.length > pageSize;
+
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+    return { tagTitle: tag.name, questions, isNext };
   } catch (error) {
     console.log("getQuestionsByTagId Error: ", error);
     throw error;

@@ -5,6 +5,7 @@ import { getAnswers } from "@/lib/actions/answer.action";
 import { getTimeStamp } from "@/lib/utils";
 
 import Filter from "./Filter";
+import Pagination from "./Pagination";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
 import { AnswerFilters } from "@/constants/filters";
@@ -84,6 +85,10 @@ const AllAnswers = async ({
             <ParseHTML data={answer.description} />
           </article>
         ))}
+      </div>
+
+      <div className="mt-10 w-full">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </div>
   );
