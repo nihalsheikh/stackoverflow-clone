@@ -1,3 +1,4 @@
+import page from "../(home)/page";
 import { auth } from "@clerk/nextjs/server";
 
 import { getSavedQuestions } from "@/lib/actions/user.action";
@@ -5,6 +6,7 @@ import { getSavedQuestions } from "@/lib/actions/user.action";
 import QuestionCard from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { QuestionFilters } from "@/constants/filters";
@@ -13,7 +15,7 @@ import { SearchParamsProps } from "@/types";
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();
-  const { q, filter } = await searchParams;
+  const { q, filter, page } = await searchParams;
 
   if (!userId) return null;
 
@@ -21,6 +23,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
     clerkId: userId,
     searchQuery: q,
     filter: filter,
+		page: page ? +page : 1,
   });
 
   return (
@@ -68,6 +71,10 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
             buttonTitle="Ask a Question"
           />
         )}
+      </div>
+
+      <div className="mt-10">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
       </div>
     </>
   );

@@ -3,6 +3,9 @@ import console from "console";
 
 import { getUserAnswers } from "@/lib/actions/user.action";
 
+import page from "@/app/(root)/(home)/page";
+
+import Pagination from "./Pagination";
 import { SearchParamsProps } from "@/types";
 
 interface Props extends SearchParamsProps {
@@ -11,9 +14,10 @@ interface Props extends SearchParamsProps {
 }
 
 const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
+  const { page } = await searchParams;
   const result = await getUserAnswers({
     userId,
-    page: 1,
+    page: page ? +page : 1,
   });
 
   return (
@@ -29,6 +33,10 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
           createdAt={item.createdAt}
         />
       ))}
+
+      <div className="mt-10">
+        <Pagination pageNumber={page ? +page : 1} isNext={result.isNext} />
+      </div>
     </>
   );
 };
