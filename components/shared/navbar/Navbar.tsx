@@ -1,10 +1,10 @@
-import GlobalSearch from "../search/GlobalSearch";
-import { SignedIn, UserButton } from "@clerk/nextjs";
-
-import React from "react";
+import React, { Suspense } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+
+import GlobalSearch from "../search/GlobalSearch";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 
 import MobileNav from "./MobileNav";
 import Theme from "./Theme";
@@ -24,7 +24,9 @@ const Navbar = () => {
           Code<span className="text-primary-500">OverFlow</span>{" "}
         </p>
       </Link>
-      <GlobalSearch />
+      <Suspense fallback={<div>Loading...</div>}>
+        <GlobalSearch />
+      </Suspense>
       <div className="flex-between gap-5">
         <Theme />
         <SignedIn>
