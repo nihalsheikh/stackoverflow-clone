@@ -7,8 +7,9 @@ const nextConfig: NextConfig = {
   experimental: {
     mdxRs: true,
   },
+
   eslint: {
-    ignoreDuringBuilds: true, // Skip ESLint in production builds
+    ignoreDuringBuilds: true,
   },
 
   serverExternalPackages: ["mongoose"],

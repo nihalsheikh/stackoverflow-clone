@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
