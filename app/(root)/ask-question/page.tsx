@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@clerk/nextjs/server";
@@ -5,6 +6,10 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/actions/user.action";
 
 import QuestionForm from "@/components/forms/QuestionForm";
+
+export const metadata: Metadata = {
+  title: "Ask Question | CodeOverflow",
+};
 
 const Page = async () => {
   // get current userId from clerk

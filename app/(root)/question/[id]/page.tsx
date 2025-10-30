@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,6 +16,10 @@ import RenderTag from "@/components/shared/RenderTag";
 import Votes from "@/components/shared/Votes";
 
 import { URLProps } from "@/types";
+
+export const metadata: Metadata = {
+  title: "Question | CodeOverflow",
+};
 
 // searchParams: use this if you need
 const Page = async ({ params, searchParams }: any) => {

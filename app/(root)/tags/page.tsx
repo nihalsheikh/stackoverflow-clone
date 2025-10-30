@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getAllTags } from "@/lib/actions/tag.actions";
@@ -9,6 +10,10 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { TagFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
+
+export const metadata: Metadata = {
+  title: "All Tags | CodeOverflow",
+};
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const { q, filter, page } = await searchParams;
