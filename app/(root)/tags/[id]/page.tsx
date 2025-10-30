@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { getQuestionsByTagId } from "@/lib/actions/tag.actions";
 
 import QuestionCard from "@/components/cards/QuestionCard";
@@ -7,6 +9,10 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { IQuestion } from "@/database/question.model";
 import { URLProps } from "@/types";
+
+export const metadata: Metadata = {
+  title: "Tag | CodeOverflow",
+};
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { id } = await params;

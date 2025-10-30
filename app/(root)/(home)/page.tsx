@@ -1,3 +1,5 @@
+// Meta-data
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getQuestions } from "@/lib/actions/question.action";
@@ -12,6 +14,10 @@ import { Button } from "@/components/ui/button";
 
 import { HomePageFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
+
+export const metadata: Metadata = {
+  title: "Home | CodeOverflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { q, filter, page } = await searchParams;

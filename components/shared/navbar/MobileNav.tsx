@@ -1,10 +1,10 @@
 "use client";
 
-import { SignedOut } from "@clerk/nextjs";
-
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { SignedOut } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -69,7 +69,7 @@ const MobileNav = () => {
         <Link href="/" className="flex items-center gap-1">
           <Image
             src="/assets/images/site-logo.svg"
-            alt="CodeOverFlow"
+            alt="CodeOverflow"
             width={23}
             height={23}
           />

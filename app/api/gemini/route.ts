@@ -20,12 +20,11 @@ export const POST = async (request: Request) => {
           messages: [
             {
               role: "system",
-              content:
-                "You are a knowledgeable assistant for the platform CodeOverflow, a stackoverflow clone project, where the AI (you) provides quality information for a question",
+              content: `You are a knowledgeable assistant for the platform CodeOverflow, a stackoverflow clone project, where the AI (you) provides quality and precise information for a question. Always start your answer with: "CodeOverflow AI Generated Answer with Google Gemini" on top of body in bold then the rest of the content. If you don't have knowledge about this ${question} please mention: "Ask the @otherDevs on CodeOverflow for better guidance" in your answer.`,
             },
             {
               role: "user",
-              content: `Solve the ${question} by providing a short and precise answer, if you don't have specific knowledge about this 'question' please mention the 'Ask the @developers of CodeOverflow' in your answer`,
+              content: `Solve the ${question} by providing a short and precise answer. If possible include all the sources to look for (links) and provide code wherever necessary.`,
             },
           ],
         }),
