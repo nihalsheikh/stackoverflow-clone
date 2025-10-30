@@ -21,7 +21,6 @@ const LeftSidebar = () => {
             (pathname.includes(item.route) && item.route.length > 1) ||
             pathname === item.route;
 
-          //  TODO: Profile page routing
           if (item.route == "/profile") {
             if (userId) {
               item.route = `${item.route}/${userId}`;
