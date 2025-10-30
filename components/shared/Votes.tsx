@@ -14,6 +14,8 @@ import {
 import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatNumber } from "@/lib/utils";
 
+import { toast } from "@/hooks/use-toast";
+
 interface Props {
   type: string;
   itemId: string; // id of question // remove Stringify if unnecessary from /question/[id]/page.tsx
@@ -44,10 +46,20 @@ const Votes = ({
       questionId: JSON.parse(itemId),
       path: pathname,
     });
+
+    return toast({
+      title: `Question ${!hasSaved ? "saved in" : "removed from"} your collection`,
+      variant: !hasSaved ? "default" : "destructive",
+    });
   };
 
   const handleVote = async (action: string) => {
-    if (!userId) return;
+    if (!userId) {
+      return toast({
+        title: "Please log in",
+        description: "You must be logged in to perform this action",
+      });
+    }
 
     if (action === "upvote") {
       if (type === "Question") {
@@ -68,9 +80,11 @@ const Votes = ({
         });
       }
 
-      // TODO: show a toast
-
-      return;
+      // show a toast
+      return toast({
+        title: `Upvote ${!hasupVoted ? "Successful" : "Removed"}`,
+        variant: !hasupVoted ? "default" : "destructive",
+      });
     }
 
     if (action === "downvote") {
@@ -92,9 +106,11 @@ const Votes = ({
         });
       }
 
-      // TODO: show a toast
-
-      return;
+      // show a toast
+      return toast({
+        title: `Downvote ${!hasdownVoted ? "Successful" : "Removed"}`,
+        variant: !hasdownVoted ? "default" : "destructive",
+      });
     }
   };
 
