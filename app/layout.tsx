@@ -5,10 +5,8 @@ import { Inter, Space_Grotesk } from "next/font/google";
 
 import { ClerkProvider } from "@clerk/nextjs";
 
-// @ts-ignore
 import "./globals.css";
 
-// @ts-ignore
 import "../styles/prism.css";
 
 import { ThemeProvider } from "@/context/ThemeProvider";

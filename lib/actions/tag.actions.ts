@@ -98,11 +98,6 @@ export async function getAllTags(params: GetAllTagsParams) {
         .limit(pageSize);
     }
 
-    // const tags = await Tag.find(query)
-    //   .sort(sortOptions)
-    //   .skip(skipAmount)
-    //   .limit(pageSize);
-
     // calc if more questions exist so that we can go to "next" page
     const totalTags = await Tag.countDocuments(query);
 

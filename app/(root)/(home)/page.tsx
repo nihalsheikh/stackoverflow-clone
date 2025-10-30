@@ -2,7 +2,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getQuestions } from "@/lib/actions/question.action";
+import { auth } from "@clerk/nextjs/server";
+
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
@@ -20,15 +25,32 @@ export const metadata: Metadata = {
 };
 
 export default async function Home({ searchParams }: SearchParamsProps) {
+  const { userId } = await auth();
+
   const { q, filter, page } = await searchParams;
 
-  const result = await getQuestions({
-    searchQuery: q,
-    filter: filter,
-    page: page ? +page : 1,
-  });
+  let result;
 
-  // TODO: recommended filter search fetch
+  if (filter === "recommended") {
+    if (userId) {
+      result = await getRecommendedQuestions({
+        userId,
+        searchQuery: q,
+        page: page ? +page : 1,
+      });
+    } else {
+      result = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else {
+    result = await getQuestions({
+      searchQuery: q,
+      filter: filter,
+      page: page ? +page : 1,
+    });
+  }
 
   return (
     <>
