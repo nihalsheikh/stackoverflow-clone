@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getAllUsers } from "@/lib/actions/user.action";
@@ -9,6 +10,10 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 
 import { UserFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
+
+export const metadata: Metadata = {
+  title: "Community | CodeOverflow",
+};
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const { q, filter, page } = await searchParams;

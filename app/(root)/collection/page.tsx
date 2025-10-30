@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import page from "../(home)/page";
 import { auth } from "@clerk/nextjs/server";
 
@@ -13,6 +15,10 @@ import { QuestionFilters } from "@/constants/filters";
 import { IQuestion } from "@/database/question.model";
 import { SearchParamsProps } from "@/types";
 
+export const metadata: Metadata = {
+  title: "Collection | CodeOverflow",
+};
+
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = await auth();
   const { q, filter, page } = await searchParams;
@@ -23,7 +29,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
     clerkId: userId,
     searchQuery: q,
     filter: filter,
-		page: page ? +page : 1,
+    page: page ? +page : 1,
   });
 
   return (
