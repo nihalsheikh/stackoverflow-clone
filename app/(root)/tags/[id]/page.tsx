@@ -7,7 +7,6 @@ import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 
-import { IQuestion } from "@/database/question.model";
 import { URLProps } from "@/types";
 
 export const metadata: Metadata = {

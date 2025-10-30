@@ -24,6 +24,7 @@ import "prismjs/components/prism-sass";
 import "prismjs/components/prism-solidity";
 import "prismjs/components/prism-sql";
 import "prismjs/components/prism-typescript";
+// @ts-ignore
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 
@@ -57,7 +58,11 @@ const ParseHTML = ({ data }: Props) => {
     return <div className="min-h-[100px]" />; // Placeholder with min height
   }
 
-  return <div suppressHydrationWarning>{parsedContent}</div>;
+  return (
+    <div suppressHydrationWarning className={`markdown w-full min-w-full`}>
+      {parsedContent}
+    </div>
+  );
 };
 
 export default ParseHTML;
